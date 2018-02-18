@@ -6,7 +6,10 @@ from coreapi.exceptions import ParseError
 from jsonhyperschema_codec.utils import _get_string, _get_list, _get_dict, get_dicts, _dereference
 import json
 import uritemplate
-import urllib
+try:
+    from urllib import unquote
+except ImportError:
+    from urllib.parse import unquote
 
 
 __version__ = "1.0.2"
@@ -43,7 +46,7 @@ def _get_content(data, base_url, ref):
                 for item in templated:
                     orig = item
                     if item.startswith('(') and item.endswith(')'):
-                        item = urllib.unquote(item.strip('(').rstrip(')'))
+                        item = unquote(item.strip('(').rstrip(')'))
                     if item.startswith('#/'):
                         components = [
                             component for component in item.strip('#/').split('/')
